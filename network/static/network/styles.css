@@ -1,0 +1,4 @@
+.custom-form textarea {
+    height: 100px; /* Adjust the height as needed */
+    resize: none;  /* Disable textarea resizing if you want a fixed height */
+}

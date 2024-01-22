@@ -1,0 +1,19 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <div class="container mt-3">
+        <h2>Followed Users Posts</h2>
+        {% for post in posts %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <p class="card-text">{{ post.content }}</p>
+                    <small class="text-muted"><a href="{% url 'user_details' username=post.user.username %}">{{ post.user.username }}</a> - {{ post.created_at }}</small>
+                    <div class="likes-section">
+                        <span class="heart-icon">&#10084;
+                        <span class="like-count">{{ post.likes.count }}</span></span>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
