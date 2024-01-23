@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -127,3 +128,24 @@ def following(request):
     pagecontent = p.get_page(page_number)
     return render(request, 'network/following.html', {"pagecontent": pagecontent})
 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .models import Post
+
+def update_post(request):
+    if request.method == "POST":
+        post_id = request.POST.get('postId')
+        content = request.POST.get('content')
+
+        try:
+            post = Post.objects.get(id=post_id, user=request.user)
+        except Post.DoesNotExist:
+            return JsonResponse({'error': 'Post not found'}, status=404)
+
+        post.content = content
+        post.created_at = datetime.now()
+        post.save()
+
+        return JsonResponse({'message': 'Post updated successfully'}, status=200)
+
+    return JsonResponse({'error': 'Invalid request method'}, status=400)

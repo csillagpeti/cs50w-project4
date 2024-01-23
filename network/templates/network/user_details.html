@@ -6,8 +6,8 @@
         <p>Username: {{ targetUser.username }}</p>
         <p>Email: {{ targetUser.email }}</p>
 
-        <h3>Followers - {{ followers.count }}</h3>
-        <h3>Following - {{ following.count }}</h3>
+        <span>Followers - <b>{{ followers.count }}</b>
+        Following - <b>{{ following.count }}</b>
 
         {% if user.username != targetUser.username and user.is_authenticated %}
             <form id="followForm" method="post" action="{% url 'toggle_follow' username=targetUser.username %}">
@@ -18,22 +18,8 @@
                 </button>
             </form>        
         {% endif %}
-
+        </span>
         <h3>Posts</h3>
-        <ul>
-            {% for post in pagecontent %}
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <p class="card-text">{{ post.content }}</p>
-                        <small class="text-muted"><a href="{% url 'user_details' username=post.user.username %}">{{ post.user.username }}</a> - {{ post.created_at }}</small>
-                        <div class="likes-section">
-                            <span class="heart-icon">&#10084;
-                            <span class="like-count">{{ post.likes.count }}</span></span>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-        </ul>
+        {% include "network/post_display.html" %}
     </div>
 {% endblock %}

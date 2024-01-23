@@ -18,17 +18,6 @@
         {% endif %}
 
         <h2>All Posts</h2>
-        {% for post in pagecontent %}
-            <div class="card mb-3">
-                <div class="card-body">
-                    <p class="content card-text" id="post-{{post.id}}">{{ post.content }}</p>
-                    <small class="text-muted"><a href="{% url 'user_details' username=post.user.username %}">{{ post.user.username }}</a> - {{ post.created_at }}</small>
-                    <div class="likes-section">
-                        <span class="heart-icon">&#10084;
-                        <span class="like-count">{{ post.likes.count }}</span></span>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
+        {% include "network/post_display.html" %}
     </div>
 {% endblock %}
