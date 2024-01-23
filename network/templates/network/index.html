@@ -18,10 +18,10 @@
         {% endif %}
 
         <h2>All Posts</h2>
-        {% for post in posts %}
+        {% for post in pagecontent %}
             <div class="card mb-3">
                 <div class="card-body">
-                    <p class="card-text">{{ post.content }}</p>
+                    <p class="content card-text" id="post-{{post.id}}">{{ post.content }}</p>
                     <small class="text-muted"><a href="{% url 'user_details' username=post.user.username %}">{{ post.user.username }}</a> - {{ post.created_at }}</small>
                     <div class="likes-section">
                         <span class="heart-icon">&#10084;

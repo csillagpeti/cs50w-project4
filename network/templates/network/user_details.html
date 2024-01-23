@@ -6,13 +6,6 @@
         <p>Username: {{ targetUser.username }}</p>
         <p>Email: {{ targetUser.email }}</p>
 
-        <h3>Posts</h3>
-        <ul>
-            {% for post in posts %}
-                <li>{{ post.content }}</li>
-            {% endfor %}
-        </ul>
-
         <h3>Followers - {{ followers.count }}</h3>
         <h3>Following - {{ following.count }}</h3>
 
@@ -25,5 +18,22 @@
                 </button>
             </form>        
         {% endif %}
+
+        <h3>Posts</h3>
+        <ul>
+            {% for post in pagecontent %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <p class="card-text">{{ post.content }}</p>
+                        <small class="text-muted"><a href="{% url 'user_details' username=post.user.username %}">{{ post.user.username }}</a> - {{ post.created_at }}</small>
+                        <div class="likes-section">
+                            <span class="heart-icon">&#10084;
+                            <span class="like-count">{{ post.likes.count }}</span></span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        </ul>
     </div>
 {% endblock %}

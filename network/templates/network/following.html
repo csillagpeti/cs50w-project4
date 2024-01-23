@@ -3,7 +3,7 @@
 {% block body %}
     <div class="container mt-3">
         <h2>Followed Users Posts</h2>
-        {% for post in posts %}
+        {% for post in pagecontent %}
             <div class="card mb-3">
                 <div class="card-body">
                     <p class="card-text">{{ post.content }}</p>
