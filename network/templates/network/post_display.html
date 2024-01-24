@@ -4,26 +4,31 @@
         <p class="content card-text" id="post-{{post.id}}">{{ post.content }}</p>
         {% if post.user.username == user.username %}
             <div class="Like">
-                <button class="btn btn-outline-primary btn-sm" onclick="replaceWithTextarea({{post.id}})">Edit</button>
+                <button class="edit btn btn-outline-primary btn-sm" onclick="replaceWithTextarea({{post.id}})">Edit</button>
             </div>
         {% endif %}
         <small class="text-muted"><a href="{% url 'user_details' username=post.user.username %}">{{ post.user.username }}</a>
-        {% if not post.last_updated %}
-            - {{ post.created_at }}
-        {% else %}
-            Likeed at: {{ post.last_updated }}
-        {% endif %}
+        <span  id="history-{{post.id}}">
+            {% if not post.last_updated %}
+                - {{ post.created_at }}
+            {% else %}
+                Edited at: {{ post.last_updated }}
+            {% endif %}
+        </span>
         </small>
 
         <div class="likes-section">
             <span class="heart-icon">&#10084;
             <span class="like-count" id="like-count-{{post.id}}">{{ post.likes.count }}</span></span>
             <br>
-            {%if user not in post.likes.all %}
-                <button class="btn btn-primary btn-sm" id="like-{{post.id}}" onclick="toggleLike({{ post.id }}, '{{ request.user.username }}')">Like</button>
-            {% else %}
-                <button class="btn btn-primary btn-sm" id="unlike-{{post.id}}" onclick="toggleLike({{ post.id }}, '{{ request.user.username }}')">Unlike</button>
+            {% if user.is_authenticated %}
+                {%if user not in post.likes.all %}
+                    <button class="btn btn-primary btn-sm" id="like-{{post.id}}" onclick="toggleLike({{ post.id }}, '{{ request.user.username }}')">Like</button>
+                {% else %}
+                    <button class="btn btn-primary btn-sm" id="unlike-{{post.id}}" onclick="toggleLike({{ post.id }}, '{{ request.user.username }}')">Unlike</button>
+                {% endif %}
             {% endif %}
+        </div>
     </div>
 </div>
 {% endfor %}

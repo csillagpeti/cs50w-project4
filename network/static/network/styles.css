@@ -3,6 +3,10 @@
     resize: none; 
 }
 
-.btn-sm {
-    margin-top: 5px;
+.save {
+    margin-top: 10px;
+}
+
+.edit {
+    margin-top: -10px;
 }

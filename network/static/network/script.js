@@ -12,6 +12,8 @@ function replaceWithTextarea(postId) {
     contentBox.remove();
     editButton = parent.querySelector("button")
     editButton.innerHTML = "Save"
+    editButton.classList.remove("edit");
+    editButton.classList.add("save");
     editButton.onclick = () => {
         let updatedContent = editArea.value;
         updatePost(postId, updatedContent);
@@ -44,12 +46,22 @@ function updatePost(postId, content) {
 
         let editButton = parent.querySelector("button");
         editButton.innerHTML = "Edit";
+        editButton.classList.remove("save");
+        editButton.classList.add("edit");
         editButton.onclick = () => {
             replaceWithTextarea(postId);
         };
 
         if (editArea) {
             editArea.remove();
+
+        let parts = data.last_updated.split(' ');
+        parts[0] = parts[0].toupperCase();
+        let formattedDate = parts.join(' ');
+        }
+        let history = document.querySelector(`#history-${postId}`)
+        if (history) {
+            history.innerHTML = `Edited at: ${formattedDate}`;
         }
     })
     .catch(error => console.error('Error:', error));
@@ -83,6 +95,14 @@ function toggleLike(postId, username){
         // Update the like number
         let counter = document.querySelector(`#like-count-${postId}`)
         counter.textContent = data.counter;
+        if (data.action == "add"){
+            let likeButton = document.querySelector(`#like-${postId}`)
+            likeButton.innerHTML = "Unlike"
+            likeButton.id = `unlike-${postId}`}
+        else if ( data.action == "remove"){
+            let likeButton = document.querySelector(`#unlike-${postId}`)
+            likeButton.innerHTML = "Like"
+            likeButton.id = `like-${postId}`}
     })
     .catch(error => console.error('Error:', error));
 }

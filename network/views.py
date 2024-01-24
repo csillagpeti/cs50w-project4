@@ -5,7 +5,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.utils import timezone
+from django.utils import dateformat, timezone
 
 from .models import User, Post, Follow
 from .forms import PostForm
@@ -132,6 +132,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Post
 
+@login_required
 def update_post(request):
     if request.method == "POST":
         post_id = request.POST.get('postId')
@@ -145,13 +146,15 @@ def update_post(request):
             post.content = content
             post.last_updated = timezone.now()
             post.save()
-
-            return JsonResponse({'message': 'Post updated successfully'}, status=200)
+            last_updated_formatted = post.last_updated.strftime('%b. %d, %Y, %-I:%M %p').lower().replace('am', 'a.m.').replace('pm', 'p.m.')
+            print (post.last_updated)
+            return JsonResponse({'message': 'Post updated successfully', 'last_updated': last_updated_formatted}, status=200)
         else:
             return JsonResponse({'error': 'Unauthorized'}, status=403)
 
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
+@login_required
 def toggle_like(request):
     print(request.POST.get('username'))
     if request.method == "POST":
@@ -166,8 +169,10 @@ def toggle_like(request):
         if user in post.likes.all():
             post.likes.remove(user)
             post.save()
-            return JsonResponse({'message': 'Like removed', 'counter': post.likes.count()}, status=200)
+            action = "remove"
+            return JsonResponse({'message': 'Like removed', 'counter': post.likes.count(), 'action': action}, status=200)
         else:
             post.likes.add(user)
             post.save()
-            return JsonResponse({'message': 'Like added', 'counter': post.likes.count()}, status=200)
+            action = "add"
+            return JsonResponse({'message': 'Like added', 'counter': post.likes.count(), 'action': action}, status=200)
