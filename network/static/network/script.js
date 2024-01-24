@@ -65,3 +65,24 @@ function getCSRFToken() {
     }
     return '';
 }
+
+function toggleLike(postId, username){
+    let formData = new FormData();
+    formData.append('postId', postId);
+    formData.append('username', username);
+
+    fetch('/toggle_like', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCSRFToken(),
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Update the like number
+        let counter = document.querySelector(`#like-count-${postId}`)
+        counter.textContent = data.counter;
+    })
+    .catch(error => console.error('Error:', error));
+}

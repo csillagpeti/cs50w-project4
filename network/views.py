@@ -151,3 +151,23 @@ def update_post(request):
             return JsonResponse({'error': 'Unauthorized'}, status=403)
 
     return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+def toggle_like(request):
+    print(request.POST.get('username'))
+    if request.method == "POST":
+        post_id = request.POST.get('postId')
+        username = request.POST.get('username')
+        
+        try:
+            post = Post.objects.get(id=post_id)
+            user = User.objects.get(username=username)
+        except (Post.DoesNotExist, User.DoesNotExist):
+            return JsonResponse({'error': 'Post or User not found'}, status=404)
+        if user in post.likes.all():
+            post.likes.remove(user)
+            post.save()
+            return JsonResponse({'message': 'Like removed', 'counter': post.likes.count()}, status=200)
+        else:
+            post.likes.add(user)
+            post.save()
+            return JsonResponse({'message': 'Like added', 'counter': post.likes.count()}, status=200)
