@@ -7,7 +7,14 @@
                 <button class="btn btn-outline-primary btn-sm" onclick="replaceWithTextarea({{post.id}})">Edit</button>
             </div>
         {% endif %}
-        <small class="text-muted"><a href="{% url 'user_details' username=post.user.username %}">{{ post.user.username }}</a> - {{ post.created_at }}</small>
+        <small class="text-muted"><a href="{% url 'user_details' username=post.user.username %}">{{ post.user.username }}</a>
+        {% if not post.last_updated %}
+            - {{ post.created_at }}
+        {% else %}
+            Edited at: {{ post.last_updated }}
+        {% endif %}
+        </small>
+
         <div class="likes-section">
             <span class="heart-icon">&#10084;
             <span class="like-count">{{ post.likes.count }}</span></span>

@@ -8,6 +8,7 @@ class User(AbstractUser):
 class Post(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     likes = models.ManyToManyField(User, related_name='liked_posts', blank=True)
 

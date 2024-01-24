@@ -1,4 +1,3 @@
-from datetime import datetime
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -6,6 +5,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.utils import timezone
 
 from .models import User, Post, Follow
 from .forms import PostForm
@@ -141,11 +141,13 @@ def update_post(request):
             post = Post.objects.get(id=post_id, user=request.user)
         except Post.DoesNotExist:
             return JsonResponse({'error': 'Post not found'}, status=404)
+        if request.user == post.user:
+            post.content = content
+            post.last_updated = timezone.now()
+            post.save()
 
-        post.content = content
-        post.created_at = datetime.now()
-        post.save()
-
-        return JsonResponse({'message': 'Post updated successfully'}, status=200)
+            return JsonResponse({'message': 'Post updated successfully'}, status=200)
+        else:
+            return JsonResponse({'error': 'Unauthorized'}, status=403)
 
     return JsonResponse({'error': 'Invalid request method'}, status=400)
